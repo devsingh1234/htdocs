@@ -26,6 +26,7 @@
   function sendMessage()
   {
     var message = document.getElementById("messaage").value;
+    //save in database
     firebase.database().ref("messages").push().set({
             "sender": myNAme,
             "message": message
@@ -34,16 +35,19 @@
     return false;
      // listen for incoming messages
  firebase.database().ref("messages").on("child_added", function(snapshot){
+  console.log(snapshot);
   var html = "";
-  html += "<li id='message-" + snapshot.key + "'>";
-   // show delete button if message is sent by me
-        if (snapshot.val().sender == myNAme) {
-            html += "<button data-id='" + snapshot.key + "' onclick='deleteMessage(this);'>";
-                html += "Delete";
-            html += "</button>";
-        }
-  html += snapshot.val().sender + ":" +snapshot.val().message;
-  html += "</li>";
+   html += "<li id='message-" + snapshot.key + "'>";
+  html += "<li>";
+  //show delte button
+  if(snapshot.val().sender == myNAme){
+    html += "<button data-id='" + snapshot.key + "' onclick='deleteMessage(this);'>";
+    html += "Delete";
+    html += "<button>";
+  }
+
+  html += snapshot.val().sender + ":" + snapshot.val().message;
+  html += "</li>"
 
   document.getElementById("messages").innerHTML +=html;
  });
@@ -71,3 +75,4 @@ firebase.database().ref("messages").on("child_removed", function (snapshot) {
   <input type="submit">
 </form>
 <ul id="messages"></ul>
+
